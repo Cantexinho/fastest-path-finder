@@ -3,7 +3,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import contextily as cx
 import matplotlib.animation as animation
-from typing import Tuple, List, Set, Generator, Optional, Any
+from typing import Generator, Any
+from src.fastest_path_finder.conf.root import root_settings
 
 
 class PathVisualizer:
@@ -23,7 +24,7 @@ class PathVisualizer:
         self.line_path = None
         self.final_path_nodes = None
 
-    def setup_plot(self) -> Tuple[plt.Figure, plt.Axes]:
+    def setup_plot(self) -> tuple[plt.Figure, plt.Axes]:
         """Set up the plot for visualization"""
         print("Setting up base plot...")
         self.fig, self.ax = ox.plot_graph(
@@ -35,46 +36,47 @@ class PathVisualizer:
             close=False,
             bgcolor="#FFFFFF",
         )
-
-        # Add basemap
+        print("Adding basemap...")
         cx.add_basemap(self.ax, source=cx.providers.OpenStreetMap.Mapnik, zoom="auto")
         self.ax.set_axis_off()
 
-        # Create placeholder artists for animation
+        print("Creating placeholder artists for animation")
         self.scatter_visited = self.ax.scatter(
-            [], [], s=5, c="blue", alpha=0.2, zorder=3
+            [], [], s=5, c=root_settings.visited_route_color, alpha=0.2, zorder=3
         )
         (self.line_path,) = self.ax.plot(
-            [], [], color="red", linewidth=2, alpha=0.7, zorder=4
+            [],
+            [],
+            color=root_settings.current_route_color,
+            linewidth=2,
+            alpha=0.7,
+            zorder=4,
         )
 
         return self.fig, self.ax
 
-    def update_frame(self, frame_data: Tuple[int, Set[int], List[int]]) -> List[Any]:
+    def update_frame(self, frame_data: tuple[int, set[int], list[int]]) -> list[Any]:
         """
         Update function for animation frames
 
         Args:
-            frame_data: Tuple of (current_node, visited_nodes, current_path)
+            frame_data: tuple of (current_node, visited_nodes, current_path)
 
         Returns:
             List of artists that were modified
         """
         current_node, visited_nodes, current_path = frame_data
-        artists_to_update = []  # For blitting
+        artists_to_update = []
 
-        if current_node is None and not self.final_path_nodes:  # Pathfinding failed
+        if current_node is None and not self.final_path_nodes:
             print("Animation: No path found state received.")
             return artists_to_update
 
-        if (
-            current_node == self.end_node and not self.final_path_nodes
-        ):  # Goal reached first time
+        if current_node == self.end_node and not self.final_path_nodes:
             self.final_path_nodes = list(current_path)
             print(f"Animation: Goal reached! Path length: {len(self.final_path_nodes)}")
-            self.line_path.set_color("red")  # Make final path red
+            self.line_path.set_color("red")
 
-        # Update visited nodes plot
         if visited_nodes:
             try:
                 valid_visited = [n for n in visited_nodes if n in self.graph_proj.nodes]
@@ -83,12 +85,12 @@ class PathVisualizer:
                         (self.graph_proj.nodes[n]["x"], self.graph_proj.nodes[n]["y"])
                         for n in valid_visited
                     ]
+                    print(f"Animation: Updating visited nodes: {len(coords)}")
                     self.scatter_visited.set_offsets(coords)
                     artists_to_update.append(self.scatter_visited)
             except Exception as e:
                 print(f"Error updating visited node scatter plot: {e}")
 
-        # Update current path plot
         if len(current_path) > 1:
             try:
                 valid_path_nodes = [
@@ -104,10 +106,10 @@ class PathVisualizer:
                     artists_to_update.append(self.line_path)
             except Exception as e:
                 print(f"Error updating path line plot: {e}")
-        elif len(current_path) <= 1:  # Clear the line if path is too short or empty
+        elif len(current_path) <= 1:
             self.line_path.set_data([], [])
             artists_to_update.append(self.line_path)
-
+        print("Rendering frame...")
         return artists_to_update
 
     def animate_search(
@@ -129,6 +131,7 @@ class PathVisualizer:
         if self.fig is None or self.ax is None:
             self.setup_plot()
 
+        print("Creating animation...")
         ani = animation.FuncAnimation(
             self.fig,
             self.update_frame,
@@ -136,12 +139,12 @@ class PathVisualizer:
             interval=interval,
             save_count=500,
             repeat=False,
-            blit=True,
+            blit=False,
         )
 
         return ani
 
-    def plot_final_path(self) -> Optional[Tuple[plt.Figure, plt.Axes]]:
+    def plot_final_path(self) -> tuple[plt.Figure, plt.Axes] | None:
         """Plot the final path statically after animation"""
         if not self.final_path_nodes:
             print("No final path to display")
@@ -151,7 +154,7 @@ class PathVisualizer:
         fig_final, ax_final = ox.plot_graph_route(
             self.graph_proj,
             self.final_path_nodes,
-            route_color="r",
+            route_color=root_settings.current_route_color,
             route_linewidth=2,
             node_size=0,
             show=False,
