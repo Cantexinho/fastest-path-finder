@@ -1,7 +1,7 @@
 import osmnx as ox
 import networkx as nx
 import heapq
-from typing import Tuple, List, Set, Generator
+from typing import Generator
 
 
 class AStar:
@@ -27,7 +27,7 @@ class AStar:
 
     def search_generator(
         self, start_node: int, end_node: int
-    ) -> Generator[Tuple[int, Set[int], List[int]], None, None]:
+    ) -> Generator[tuple[int, set[int], list[int]], None, None]:
         """
         Generator version of A* search algorithm that yields intermediate states
 
@@ -36,7 +36,7 @@ class AStar:
             end_node: Target node ID
 
         Yields:
-            Tuple containing (current_node, visited_nodes_set, current_path_nodes)
+            tuple containing (current_node, visited_nodes_set, current_path_nodes)
         """
         open_set = [(0, start_node)]
         came_from = {}
@@ -53,7 +53,6 @@ class AStar:
 
             visited_nodes_set.add(current_node)
 
-            # Reconstruct current path
             current_path_nodes = []
             temp_curr = current_node
             while temp_curr in came_from:
@@ -62,7 +61,6 @@ class AStar:
             current_path_nodes.append(start_node)
             current_path_nodes.reverse()
 
-            # Yield current state
             yield (current_node, set(visited_nodes_set), list(current_path_nodes))
 
             if current_node == end_node:
@@ -92,4 +90,4 @@ class AStar:
                     heapq.heappush(open_set, (f_score[neighbor], neighbor))
 
         print("Path not found by generator.")
-        yield (None, visited_nodes_set, [])  # Indicate failure
+        yield (None, visited_nodes_set, [])
