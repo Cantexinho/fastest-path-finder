@@ -1,0 +1,25 @@
+[project]
+name = "fastest-path-finder"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "Cantexinho",email = "pk.developing@gmail.com"}
+]
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "pydantic<=2.11.3",
+    "pydantic-settings<=2.9.1",
+    "osmnx<=2.0.2",
+    "matplotlib<=3.10.1",
+    "scikit-learn<=1.6.1",
+    "contextily<=1.6.2",
+
+]
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry.scripts]
+start = "fastest_path_finder.__main__:main"
