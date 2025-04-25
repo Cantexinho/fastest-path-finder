@@ -14,6 +14,7 @@ class RootSettings(BaseSettings):
     weight: str = "travel_time"
     visited_route_color: str = "blue"
     current_route_color: str = "red"
+    simplify_graph: bool = True
 
 
 def load_settings_from_yaml(path: str) -> dict:
