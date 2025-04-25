@@ -1,9 +1,10 @@
 animation_interval: 300
 map_center_point: [54.67000, 25.26060]
 map_distance: 1200
-network_type: "walk" # 'drive', 'walk', 'bike'
+network_type: "bike" # 'drive', 'walk', 'bike'
 start_coords: [54.67299, 25.269059]
-end_coords: [54.668064, 25.250680]
+end_coords: [54.674295, 25.265288]
 weight: "length" #travel_time, lenght
 visited_route_color: "blue"
 current_route_color: "red"
+simplify_graph: true

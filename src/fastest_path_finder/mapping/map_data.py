@@ -11,6 +11,7 @@ class MapData:
         center_point: tuple[float, float],
         distance: int,
         network_type: str = "walk",
+        simplify_graph: bool = True,
     ):
         """
         Initialize and fetch map data
@@ -25,6 +26,7 @@ class MapData:
         self.network_type = network_type
         self.graph = None
         self.graph_proj = None
+        self.simplify_graph = simplify_graph
 
     def fetch_graph(self) -> nx.MultiDiGraph:
         """Fetch and process the graph"""
@@ -35,7 +37,7 @@ class MapData:
             self.center_point,
             dist=self.distance,
             network_type=self.network_type,
-            simplify=True,
+            simplify=self.simplify_graph,
         )
 
         print(f"Graph fetched in {time.time() - start_time:.2f} seconds.")

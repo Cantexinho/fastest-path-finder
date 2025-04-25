@@ -30,7 +30,9 @@ class NavigationApp:
             distance: Search radius in meters
             network_type: Type of network (walk, drive, bike, etc.)
         """
-        self.map_data = MapData(center_point, distance, network_type)
+        self.map_data = MapData(
+            center_point, distance, network_type, root_settings.simplify_graph
+        )
         self.map_data.preprocess_graph()
         self.map_data.project_graph()
 
