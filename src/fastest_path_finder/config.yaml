@@ -1,10 +1,12 @@
-animation_interval: 300
-map_center_point: [54.67000, 25.26060]
-map_distance: 1200
-network_type: "bike" # 'drive', 'walk', 'bike'
-start_coords: [54.67299, 25.269059]
-end_coords: [54.674295, 25.265288]
-weight: "length" #travel_time, lenght
-visited_route_color: "blue"
-current_route_color: "red"
-simplify_graph: true
+# Use: https://www.openstreetmap.org/ to find coordinates
+
+animation_interval: 100 # Milliseconds. How fast frames are updated. 
+map_center_point: [54.68522, 25.27358] # Coordinates. Center of location we want to see in map.
+map_distance: 1200 # Meters. How far we want to see in map.
+network_type: "bike" # 'drive', 'walk', 'bike'. Which road network we want to use.
+start_coords: [54.688661, 25.261055] # Coordinates. Starting point of the route.
+end_coords: [54.683104, 25.286665] # Coordinates. Ending point of the route.
+weight: "length" #travel_time, lenght. Which weight we want to use for the route.
+visited_route_color: "blue" # Color of the route that was already visited.
+current_route_color: "red" # Color of the route that is currently being visited.
+simplify_graph: true # If true, the graph will be simplified to reduce the number of nodes and edges.
