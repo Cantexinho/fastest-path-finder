@@ -75,7 +75,7 @@ class PathVisualizer:
         if current_node == self.end_node and not self.final_path_nodes:
             self.final_path_nodes = list(current_path)
             print(f"Animation: Goal reached! Path length: {len(self.final_path_nodes)}")
-            self.line_path.set_color("red")
+            self.line_path.set_color(root_settings.current_route_color)
 
         if visited_nodes:
             try:
